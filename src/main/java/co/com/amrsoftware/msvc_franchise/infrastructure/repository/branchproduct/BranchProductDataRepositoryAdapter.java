@@ -5,7 +5,10 @@ import co.com.amrsoftware.msvc_franchise.domain.model.branchproduct.gategays.Bra
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,6 +31,24 @@ public class BranchProductDataRepositoryAdapter implements BranchProductReposito
     @Transactional
     public Mono<Void> deleteByBranchIdAndProductId(Long branchId, Long productId) {
         return repository.deleteByBranchIdAndProductId(branchId, productId);
+    }
+
+    @Override
+    @Transactional
+    public Mono<Void> deleteByProductId(Long productId) {
+        return repository.deleteByProductId(productId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Flux<BranchProduct> findByBranchId(Long branchId) {
+        return repository.findByBranchId(branchId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Flux<BranchProduct> findAllByBranchIdIn(List<Long> ids) {
+        return repository.findAllByBranchIdIn(ids);
     }
 
     private BranchProduct toDto(BranchProductData data) {

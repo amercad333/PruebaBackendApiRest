@@ -16,6 +16,12 @@ public class ProductDataRepositoryAdapter implements ProductRepository {
     private final ProductDataRepository repository;
 
     @Override
+    @Transactional
+    public Flux<Product> findAll() {
+        return repository.findAll().map(this::toDto);
+    }
+
+    @Override
     public Mono<Product> save(Product product) {
         return repository.save(this.toEntity(product)).map(this::toDto);
     }

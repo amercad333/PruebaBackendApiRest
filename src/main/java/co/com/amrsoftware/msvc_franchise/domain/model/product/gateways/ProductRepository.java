@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface ProductRepository {
+    Flux<Product> findAll();
     Mono<Product> save(Product product);
     Mono<Product> findById(Long id);
     Flux<Product> findAllById(List<Long> ids);

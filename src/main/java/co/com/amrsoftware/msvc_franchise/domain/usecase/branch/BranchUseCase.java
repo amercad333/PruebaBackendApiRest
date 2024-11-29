@@ -4,7 +4,6 @@ import co.com.amrsoftware.msvc_franchise.domain.model.branch.Branch;
 import co.com.amrsoftware.msvc_franchise.domain.model.branch.gateways.BranchRepository;
 import co.com.amrsoftware.msvc_franchise.domain.model.branchproduct.BranchProduct;
 import co.com.amrsoftware.msvc_franchise.domain.model.branchproduct.gategays.BranchProductRepository;
-import co.com.amrsoftware.msvc_franchise.domain.model.franchisebranch.FranchiseBranch;
 import co.com.amrsoftware.msvc_franchise.domain.model.product.Product;
 import co.com.amrsoftware.msvc_franchise.domain.model.product.gateways.ProductRepository;
 import co.com.amrsoftware.msvc_franchise.domain.usecase.exception.ObjectNotExistingException;
@@ -18,6 +17,7 @@ import java.util.List;
 import static co.com.amrsoftware.msvc_franchise.domain.usecase.util.constnt.Constant.MESSAGE_OBJECT_NOT_EXISTING_BRANCHE;
 import static co.com.amrsoftware.msvc_franchise.domain.usecase.util.constnt.Constant.MESSAGE_OBJECT_NOT_FOUND;
 import static co.com.amrsoftware.msvc_franchise.domain.usecase.util.constnt.Constant.MESSAGE_OBJECT_NOT_FOUND_BRANCHE;
+import static co.com.amrsoftware.msvc_franchise.domain.usecase.util.constnt.Constant.MESSAGE_OBJECT_NOT_FOUND_FRANCHISE;
 
 @RequiredArgsConstructor
 public class BranchUseCase {
@@ -27,6 +27,21 @@ public class BranchUseCase {
 
     public Flux<Branch> findAll() {
         return repository.findAll();
+    }
+
+    public Mono<Branch> findById(Long id) {
+        return repository.findById(id).flatMap(branchDB -> {
+            return branchProductRepository.findByBranchId(id).map(BranchProduct::getProductId)
+                .collectList()
+                .flatMap(ids -> {
+                return productRepository.findAllById(ids).collectList().map(productDB -> {
+                    branchDB.setProducts(productDB);
+                    return branchDB;
+                });
+            });
+        }).switchIfEmpty(
+            Mono.error(() -> new ObjectNotFoundException(MESSAGE_OBJECT_NOT_FOUND_BRANCHE))
+        );
     }
 
     public Mono<Branch> save(Branch branch) {
@@ -79,5 +94,14 @@ public class BranchUseCase {
         }).switchIfEmpty(
             Mono.error(() -> new ObjectNotFoundException(MESSAGE_OBJECT_NOT_FOUND_BRANCHE))
         ).then();
+    }
+
+    public Mono<Branch> updateById(Long id, Branch branch) {
+        return repository.findById(id).flatMap(branchDB -> {
+            branchDB.setName(branch.getName());
+            return repository.save(branchDB);
+        }).switchIfEmpty(
+                Mono.error(() -> new ObjectNotFoundException(MESSAGE_OBJECT_NOT_FOUND_FRANCHISE))
+        );
     }
 }
