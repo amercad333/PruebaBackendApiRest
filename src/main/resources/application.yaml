@@ -1,0 +1,19 @@
+server:
+  port: 8002
+
+spring.:
+  application:
+    name: msvc-franquicias
+
+  webflux:
+    base-path: /franchises
+
+db:
+  database: FRANQUICIASDB
+  host-name: localhost
+  max-size: 10
+  max-live-connection: 60
+  min-size: 5
+  password: 123456
+  port: 3306
+  username: root
