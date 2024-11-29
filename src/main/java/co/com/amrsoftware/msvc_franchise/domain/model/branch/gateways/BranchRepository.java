@@ -11,4 +11,5 @@ public interface BranchRepository {
     Flux<Branch> findAllById(List<Long> ids);
     Flux<Branch> findAll();
     Mono<Branch> findById(Long id);
+    Mono<Void> deleteById(Long id);
 }

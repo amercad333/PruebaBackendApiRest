@@ -31,6 +31,12 @@ public class FranchiseDataRepositoryAdapter implements FranchiseRepository {
         return repository.findById(id).map(this::toDto);
     }
 
+    @Override
+    @Transactional
+    public Mono<Void> deleteById(Long id) {
+        return repository.deleteById(id);
+    }
+
     private Franchise toDto(FranchiseData data) {
         return Franchise.builder()
             .id(data.getId())

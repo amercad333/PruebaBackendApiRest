@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 @Repository
 @RequiredArgsConstructor
 public class BranchProductDataRepositoryAdapter implements BranchProductRepository {
@@ -46,9 +44,9 @@ public class BranchProductDataRepositoryAdapter implements BranchProductReposito
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Flux<BranchProduct> findAllByBranchIdIn(List<Long> ids) {
-        return repository.findAllByBranchIdIn(ids);
+    @Transactional
+    public Mono<Void> deleteByBranchId(Long id) {
+        return repository.deleteByBranchId(id);
     }
 
     private BranchProduct toDto(BranchProductData data) {

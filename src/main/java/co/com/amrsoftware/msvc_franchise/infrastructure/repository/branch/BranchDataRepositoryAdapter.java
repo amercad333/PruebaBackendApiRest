@@ -39,6 +39,12 @@ public class BranchDataRepositoryAdapter implements BranchRepository {
         return repository.findById(id).map(this::toDto);
     }
 
+    @Override
+    @Transactional
+    public Mono<Void> deleteById(Long id) {
+        return repository.deleteById(id);
+    }
+
     private Branch toDto(BranchData data) {
         return Branch.builder()
                 .id(data.getId())

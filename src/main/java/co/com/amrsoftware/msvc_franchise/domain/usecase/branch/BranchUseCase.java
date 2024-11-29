@@ -4,6 +4,7 @@ import co.com.amrsoftware.msvc_franchise.domain.model.branch.Branch;
 import co.com.amrsoftware.msvc_franchise.domain.model.branch.gateways.BranchRepository;
 import co.com.amrsoftware.msvc_franchise.domain.model.branchproduct.BranchProduct;
 import co.com.amrsoftware.msvc_franchise.domain.model.branchproduct.gategays.BranchProductRepository;
+import co.com.amrsoftware.msvc_franchise.domain.model.franchisebranch.gateways.FranchiseBranchRepository;
 import co.com.amrsoftware.msvc_franchise.domain.model.product.Product;
 import co.com.amrsoftware.msvc_franchise.domain.model.product.gateways.ProductRepository;
 import co.com.amrsoftware.msvc_franchise.domain.usecase.exception.ObjectNotExistingException;
@@ -24,6 +25,7 @@ public class BranchUseCase {
     private final BranchRepository repository;
     private final ProductRepository productRepository;
     private final BranchProductRepository branchProductRepository;
+    private final FranchiseBranchRepository franchiseBranchRepository;
 
     public Flux<Branch> findAll() {
         return repository.findAll();
@@ -103,5 +105,16 @@ public class BranchUseCase {
         }).switchIfEmpty(
                 Mono.error(() -> new ObjectNotFoundException(MESSAGE_OBJECT_NOT_FOUND_FRANCHISE))
         );
+    }
+
+    public Mono<Void> deleteById(Long id) {
+        return repository.findById(id).map(branchDB -> {
+            branchProductRepository.deleteByBranchId(id).subscribe();
+            repository.deleteById(id).subscribe();
+            franchiseBranchRepository.deleteByBranchId(id).subscribe();
+            return Mono.just(true);
+        }).switchIfEmpty(
+            Mono.error(() -> new ObjectNotFoundException(MESSAGE_OBJECT_NOT_FOUND_FRANCHISE))
+        ).then();
     }
 }

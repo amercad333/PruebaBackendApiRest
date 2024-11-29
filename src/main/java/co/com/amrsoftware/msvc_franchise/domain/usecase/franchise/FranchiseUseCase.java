@@ -95,6 +95,16 @@ public class FranchiseUseCase {
         );
     }
 
+    public Mono<Void> deleteById(Long id) {
+        return repository.findById(id).map(franchiseDB -> {
+            franchiseBranchRepository.deleteByFranchiseId(id).subscribe();
+            repository.deleteById(id).subscribe();
+            return Mono.just(true);
+        }).switchIfEmpty(
+            Mono.error(() -> new ObjectNotFoundException(MESSAGE_OBJECT_NOT_FOUND_FRANCHISE))
+        ).then();
+    }
+
     private List<BranchDetails> branchDetails(List<Branch> branchs, List<Product> products) {
          return branchs.stream().map(branch ->
             BranchDetails.builder().id(branch.getId())

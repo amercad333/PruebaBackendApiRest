@@ -31,6 +31,18 @@ public class FranchiseBranchDataRepositoryAdapter implements FranchiseBranchRepo
         return repository.findAllByFranchiseId(id).map(this::toDto);
     }
 
+    @Override
+    @Transactional
+    public Mono<Void> deleteByBranchId(Long branchId) {
+        return repository.deleteByBranchId(branchId);
+    }
+
+    @Override
+    @Transactional
+    public Mono<Void> deleteByFranchiseId(Long franchiseId) {
+        return repository.deleteByFranchiseId(franchiseId);
+    }
+
     private FranchiseBranch toDto(FranchiseBranchData data) {
         return FranchiseBranch.builder()
                 .id(data.getId())

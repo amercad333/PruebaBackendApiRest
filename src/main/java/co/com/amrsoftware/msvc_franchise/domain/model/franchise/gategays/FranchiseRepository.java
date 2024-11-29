@@ -8,4 +8,5 @@ public interface FranchiseRepository {
     Mono<Franchise> save(Franchise franchise);
     Flux<Franchise> findAll();
     Mono<Franchise> findById(Long id);
+    Mono<Void> deleteById(Long id);
 }

@@ -55,4 +55,9 @@ public class BranchController {
     public ResponseEntity<Mono<Branch>> updateById(@PathVariable Long id, @Valid @RequestBody Branch branch) {
         return ResponseEntity.ok(useCase.updateById(id, branch));
     }
+
+    @DeleteMapping(API + "/{id}")
+    public ResponseEntity<Mono<Void>> deleteById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(useCase.deleteById(id));
+    }
 }

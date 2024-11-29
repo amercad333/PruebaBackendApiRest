@@ -86,6 +86,7 @@ http://localhost:8002/franchises/branches/api/1
 - Eliminar un producto a las sucursal - Método Delete
   http://localhost:8002/franchises/branches/api/delete/1/22
 
+###### CRUD para gestionar los las franquicias
 
 - Mostrar todas las franquicias - Método GET
   http://localhost:8002/franchises/franchises/api
@@ -112,6 +113,8 @@ JSON que se enviá en el body
 "name": "Franquicia Update",
 }
 ```
+- Eliminar un producto a las sucursal - Método Delete
+-  http://localhost:8002/franchises/branches/api/17
 
 - Crear una sucursal desde la franquicia - Método POST
   http://localhost:8002/franchises/franchises/api/assign/1
@@ -122,3 +125,6 @@ JSON que se enviá en el body
 "name": "Branch update"
 }
 ```
+
+- Eliminar un franquicia - Método Delete
+http://localhost:8002/franchises/franchises/api/1
